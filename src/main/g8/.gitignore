@@ -1,0 +1,21 @@
+# Mac files
+*.DS_Store
+
+# file ignores
+*.log
+
+# build files
+/classes/
+/build/
+/bin/
+/out/
+target/
+/lib_managed/
+*.jar
+*.class
+
+# Intellij
+.idea
+*.iml
+*.ipr
+*.iws

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <!--Used to name each of the pieces of the properties-->
+        <Property name="timestamp">%d{yyyy-MM-dd HH:mm:ss}</Property>
+        <Property name="logEntryType">%-5p</Property>
+        <Property name="className">%F</Property>
+        <Property name="lineNumber">%L</Property>
+        <Property name="message">%m</Property>
+        <Property name="newline">%n</Property>
+        <Property name="pattern" value="[\${timestamp}] [\${logEntryType}] [\${className}:\${lineNumber}] \${message}\${newline}" />
+        <Property name="colorfulPattern" value="[\${timestamp}] [%highlight{\${logEntryType}}{TRACE=magenta}] [\${className}:\${lineNumber}] \${message}\${newline}" />
+    </Properties>
+    <Appenders>
+        <RollingFile name="RollingFile" fileName="logs/output.log" filePattern="logs/output-%i.log">
+            <!--Uses the above property named "pattern"-->
+            <PatternLayout pattern="\${pattern}" />
+            <Policies>
+                <OnStartupTriggeringPolicy /> <!-- Start a new log file on startup -->
+                <SizeBasedTriggeringPolicy size="25 MB"/> <!-- Start a new log file at 25MB -->
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <!--Uses the above property named "colorfulPattern"-->
+            <PatternLayout pattern="\${colorfulPattern}" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="TRACE">
+            <AppenderRef ref="RollingFile" level="INFO"/>
+            <AppenderRef ref="STDOUT" level="TRACE"/>
+        </Root>
+    </Loggers>
+</Configuration>
