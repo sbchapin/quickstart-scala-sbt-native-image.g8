@@ -1,61 +1,27 @@
 package $package$
 
-import $package$.hello.Greeter
-import $package$.args._
-import $package$.config._
-import com.typesafe.scalalogging.LazyLogging
-
+import $package$.args.Args
+import $package$.args.Command.{Hi, Pi}
 
 /**
-  * Hello, world
-  *
-  * with examples of:
-  * - Logging
-  * - Argument parsing
-  * - Configuration parsing
-  *
-  * Text headers generated via http://patorjk.com/software/taag/#p=display&f=Stampate
+  * Various demos of what a native-image can do, including...
+  * - Typesafe arg parsing using Scopt
+  * - Configurable logging interface using Scalalogging and underlying Logback mechanism
+  * - Async & parallelization using Monix
   *
   * @author sbchapin
-  * @since 10/3/17.
+  * @since 11/11/19.
   */
-object Main extends App with LazyLogging {
+object Main {
 
-
-
-  //  `.---     .             .-,--.           .  ,.
-  //   |__  ,-. |- ,-. . .     '|__/ ,-. . ,-. |- `'
-  //  ,|    | | |  |   | |     .|    | | | | | |  ,.
-  //  `^--- ' ' `' '   `-|     `'    `-' ' ' ' `' `'
-  //                    /|
-  //                   `-'
-
-
-  // Demonstrating configuration parsing
-  val configuration: Configuration = parseConfiguration()
-
-  // Demonstrating usage of parsed configurations
-  {
-    val greeter = new Greeter()
-    val greeting = greeter.greet(configuration.name)
-    for (i <- 1 to configuration.iterations) {
-      logger.info(s"Greeting \$i \$greeting")
+  /**
+    * Entrypoint
+    */
+  def main(rawArgs: Array[String]): Unit = {
+    Args.parse(rawArgs) {
+      case Args(Hi(n))    => DemoLogging(name = n)
+      case Args(Pi(i, p)) => DemoParallelism(iterations = i, parallelism = p)
     }
   }
-
-
-  // Demonstrating argument parsing (try passing the --help flag and the -n or --name flags with values.)
-  // NOTE: You should validate and respond to invalid user input as soon as possible - this is not a realistic example.
-  //       In reality, arg parsing will frequently be one of the first things to happen, and arguments and configuration will not be so closely related.
-  val arguments: Arguments = parseArguments(args, defaultName = configuration.name)
-
-  // Demonstrating different parsed arguments and log levels
-  {
-    val greeter = new Greeter(arguments.name)
-    logger.error(greeter.greet("Bad Stuff"))
-    logger.warn(greeter.greet("Not-so-good stuff"))
-    logger.info(greeter.greet("Biscuits and Tea"))
-    logger.debug(greeter.greet("Details"))
-    logger.trace(greeter.greet("Juicy Details"))
-  }
 }
+

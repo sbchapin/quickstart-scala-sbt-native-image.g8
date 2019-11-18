@@ -1,8 +1,8 @@
 # $name$ #
 
-An opinionated quickstart of a scala project using sbt as the build system.
+An opinionated quickstart of a scala project that builds to a native binary without need for the JRE.
 
-By default, this will create a project containing a great base to make a production-level application.
+By default, this will create a project containing only dependencies that compile on GraalVM, with exampls of the stuff you will very likely already have need for. _(Arg parsing, Logging, parallelism...)_
 
 The intention is to use `sbt new` on this library's exterior g8 template, then trim it down to keeping only what you need.
 

@@ -1,27 +1,36 @@
-ThisBuild / scalaVersion := "2.13.1"
-ThisBuild / crossScalaVersions := Seq("2.11.12", "2.12.10", "2.13.1")
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
+ThisBuild / scalaVersion := "2.12.10"
 ThisBuild / organization := "$organization$"
+ThisBuild / maintainer := "$maintainer$"
 ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 ThisBuild / javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint")
 
 
 lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin)
   .settings(
-    name := "$name;format="norm"$",
+    name := "$name$",
     version := "0.0.0",
 
-    // Option Parsing:
-    libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.1",
+    // Options used by `native-image` when building native image.
+    // https://www.graalvm.org/docs/reference-manual/native-image/
+    graalVMNativeImageOptions ++= Seq(
+        "--initialize-at-build-time", // Auto-packs dependent libs at build-time
+        "--no-fallback", // Bakes-in run-time reflection (alternately: --auto-fallback, --force-fallback)
+        "--no-server", // Won't be running `graalvm-native-image:packageBin` often, so one less thing to break
+        "--static" // Disable for OSX (non-docker) builds - Forces statically-linked binary, compatible with libc (linux)
+    ),
 
-    // Configuration:
-    libraryDependencies += "com.github.pureconfig" %% "pureconfig" % "0.12.1",
+    // JSON parser, with opinions:
+    libraryDependencies += "io.monix" %% "monix" % "3.1.0",
+
+    // Arg Parsing:
+    libraryDependencies += "com.github.scopt" %% "scopt" % "4.0.0-RC2",
 
     // Logging:
     libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
-    libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.29",                                 // slf4j as logging interface
-    libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.12.1" % Runtime, // bridge: slf4j -> log4j
-    libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.12.1" % Runtime,        // log4j as logging mechanism
-    libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.12.1" % Runtime,       // log4j as logging mechanism
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
 
     // Testing:
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test,
