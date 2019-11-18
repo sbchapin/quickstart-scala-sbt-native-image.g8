@@ -11,12 +11,11 @@ The intention is to use `sbt new` on this library's exterior g8 template, then t
 
 - `Scala 2.12` for **coding**
 - `sbt 1.+` for **building**
-- `sbt-assembly` plugin for **running as a package** _(builds a fat jar with all dependencies via `sbt assembly`)_
+- `sbt-native-packager` plugin for **building a linked binary** _(builds ahead-of-time using GraalVM statically linking and building all dependencies in a docker image via `sbt graalvm-native-image:packageBin`)_
 - `scalatest` for **testing** _(default test runner via `sbt test`)_
 - `sbt-scoverage` for **test coverage** _(statement-level coverage via `sbt coverage`)_
 - `scalalogging -> slf4j -> log4j2` for **logging** _(scala code -> interface -> mechanism)_
 - `scopt` for command-line **argument parsing**
-- `pureconf -> typesafe config` for **configuration parsing** _(scala code -> mechanism)_
 - `sbt-updates` for **keeping up-to-date** _(dependency updates via `sbt dependencyUpdates`)_
 - `sbt-dependency-graph` for **understanding your package** _(dependency graph via `sbt dependencyBrowseGraph` and dependency stats via `sbt dependencyStats`)_
 
@@ -28,15 +27,17 @@ Check out the [Libs](#markdown-header-libs) below for more details on each.
 
 Remove previous build, check for updates for dependencies, view dependency graph in-browser, compile, test with coverage, generate coverage report, create a fat jar, and finally run from source.
 ```sh
-sbt clean dependencyUpdates dependencyBrowseGraph compile coverage test coverageReport coverageOff assembly run
+sbt clean dependencyUpdates dependencyBrowseGraph compile coverage test coverageReport coverageOff graalvm-native-image:packageBin run
 ```
 
 
 ## Build: ##
 
-Compile, test, and create a fat jar:
+Test, compile ahead-of-time, and statically link an executable for a libc-based system _(will only work on linux)_:
 ```sh
-sbt assembly # jar created under build/libs/.
+docker build -t $name$ . && docker run $name$
+# ...or if on linux...
+sbt graalvm-native-image:packageBin # jar created under build/libs/.
 ```
 
 ## Test: ##
@@ -62,20 +63,6 @@ sbt run
 ```
 
 ---
-
-If you want to run **in isolation...**
-
-1. Build the jar once: `sbt assembly`
-3. Distribute to your heart's content (example shown): `scp /target/scala*/$name;format="norm"$-*.jar user@wherever:.`
-2. Have your clients run the jar (only requires the jar, no code or repo): `java -jar $name;format="norm"$-*.jar`
-
-A quick sanity check can be done via the following:
-```sh
-sbt assembly
-scala target/scala*/$name;format="norm"$-*.jar
-# or
-java -jar target/scala*/$name;format="norm"$-*.jar
-```
 
 
 # Libs #
@@ -200,61 +187,6 @@ object Main {
   }
 }
 ```
-
-
-## [pureconfig](https://github.com/pureconfig/pureconfig) - configuration parsing ##
-
-`pureconfig` is a framework that allows succinct and powerful configuration parsing & management.  It is designed to target scala, and uses many scala idioms (you'll find yourself slowly being led to write monoids for your configurations and using `pureconfig` to represent your configuration as a data structure.)
-
-###### Why do we use it? ######
-
-- Parsing configurations is a chore that has been solved.
-- It allows us to keep out configuration DRY and commented (refer to `src/main/resources/application.conf`)
-- Allows multiple configuration types (`.properties`, `.conf`, `.json`).
-- It doesn't force us to make decisions about how we use or store configuration files or streams, it just does the heavy lifting (while providing sensible defaults like `application.conf`).
-- Options like `JCommander` and plain `typesafe config` are too java-specific, while `sbt` configurations are too simple. `pureconfig` is just right.
-
-###### How do we use it? ######
-
-- `pureconfig` uses [typesafe config](https://github.com/typesafehub/config) to handle configuration files. `pureconfig` is really just a pretty scala interoperability layer.  Expect to be using and passing around instances of the `com.typesafe.config.Config` class.
-- Refer to the entry point of the application to see it in action.
-
-###### Quick Example: ######
-
-`src/main/resources/application.conf`:
-```conf
-// Notice these two are not used in the configuration object
-firstName = "Mr."
-lastName = "Wooster"
-// And that we can express concatenation here in the configuration
-name = \${firstName} \${lastName}
-age = 30
-```
-
-`src/main/scala/com/example/Main.scala`:
-```scala
-import com.typesafe.config.{Config, ConfigFactory}
-
-object Main {
-
-  final case class OurConfiguration(name: String, age: Int)
-
-  def main(args: Array[String]) {
-
-    // Use typesafe config to load config with sensible defaults
-    val defaultConfig: Config =
-      ConfigFactory           // Typesafe ConfigFactory for loading Configs
-        .defaultApplication() // Defaults to this classloader's resources' `appliction.conf`
-        .resolve()            // Not necessary unless your config has any imports, var substitutions, conditionals, etc...
-
-    // Use pureconfig to convert to our scala object
-    val configuration: OurConfiguration = pureconfig.loadConfigOrThrow[OurConfiguration](defaultConfig)
-
-    // Go nuts
-  }
-}
-```
-
 
 ## [scala-logging](https://github.com/lightbend/scala-logging) - universal logging ##
 
