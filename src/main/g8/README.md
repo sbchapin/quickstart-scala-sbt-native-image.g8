@@ -33,11 +33,11 @@ sbt clean dependencyUpdates dependencyBrowseGraph compile coverage test coverage
 
 ## Build: ##
 
-Test, compile ahead-of-time, and statically link an executable for a libc-based system _(will only work on linux)_:
+Test, compile ahead-of-time, and statically link an executable:
 ```sh
 docker build -t $name$ . && docker run $name$
-# ...or if on linux...
-sbt graalvm-native-image:packageBin # jar created under build/libs/.
+# ...or if on linux (or other libc system)...
+sbt graalvm-native-image:packageBin # binary created under target/graalvm-native-image/$name$
 ```
 
 ## Test: ##
@@ -71,18 +71,19 @@ Below are the libraries used to provide a broad starting base for this project.
 
 
 
-## [sbt-assembly](https://github.com/sbt/sbt-assembly) - bundled jars ##
+## [sbt-native-packager](https://github.com/sbt/sbt-native-packager) - JRE-less executable ##
 
-`sbt-assembly` is an sbt plugin that allows us to build a large jar that is packed with all of its dependencies.  sbt-assembly is analogous to the Maven "shade" plugin.
+`sbt-native-packager` is an sbt plugin that allows sbt to build various distributables.
 
 ###### Why do we use it? ######
 
-- Build jars that can run on their own
-- Build jars that hide conflicting dependencies
+- GraalVM integration allows us to build small fast-starting binaries.
+- Bake dependencies into binaries.
 
 ###### How do we use it? ######
 
-- By running `sbt assembly` to generate a jar
+- By running `docker build -t $name$ . && docker run $name$` to generate a very small (<10 MB) image with very little (milliseconds) of start-up time.
+- By running `sbt graalvm-native-image:packageBin` to generate an executable if in a libc environment (linux) with GraalVM and the native-image plugin already installed.
 
 
 
