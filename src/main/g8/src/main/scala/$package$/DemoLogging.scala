@@ -10,7 +10,7 @@ object DemoLogging extends LazyLogging {
     * Demonstrates log levels and usage of scalalogging -> slf4j -> logbac
     */
   def apply(name: String): Unit = {
-    logger.info(s"Hello, $name!")
+    logger.info(s"Hello, \$name!")
 
     logger.error("Bad Stuff")
     logger.warn("Not-so-good stuff")

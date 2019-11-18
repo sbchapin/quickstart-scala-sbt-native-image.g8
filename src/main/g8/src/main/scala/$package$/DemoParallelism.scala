@@ -17,7 +17,7 @@ object DemoParallelism extends LazyLogging {
     * @param parallelism Concurrent processes
     */
   def apply(iterations: Long, parallelism: Int): Unit = {
-    logger.info(f"Will approximate Pi with $iterations%,d iterations of random bubble-filling and $parallelism%,d parallel processes...")
+    logger.info(f"Will approximate Pi with \$iterations%,d iterations of random bubble-filling and \$parallelism%,d parallel processes...")
 
     // Scheduler for parallelism:
     implicit val s: Scheduler = Scheduler.forkJoin(parallelism, maxThreads = 1000)
@@ -25,7 +25,7 @@ object DemoParallelism extends LazyLogging {
     // Approximation of pi using iteration:
     val pi = approximatePi(iterations).runToFuture
 
-    logger.info(s"Pi is roughly ${Await.result(pi, atMost = 30.seconds)}")
+    logger.info(s"Pi is roughly \${Await.result(pi, atMost = 30.seconds)}")
   }
 
   /**
