@@ -35,9 +35,14 @@ sbt clean dependencyUpdates dependencyBrowseGraph compile coverage test coverage
 
 Test, compile ahead-of-time, and statically link an executable:
 ```sh
-docker build -t $name$ . && docker run $name$
+docker build -t $name$ .
+docker run $name$ --help
+docker run $name$ hi -n '$maintainer$'
+docker run $name$ pi --iterations 100000 --parallelism 10
 # ...or if on linux (or other libc system)...
-sbt graalvm-native-image:packageBin # binary created under target/graalvm-native-image/$name$
+sbt graalvm-native-image:packageBin # binary created under target/graalvm-native-image/$name$\
+target/graalvm-native-image/$name$ --help
+# ...see above docker examples...
 ```
 
 ## Test: ##

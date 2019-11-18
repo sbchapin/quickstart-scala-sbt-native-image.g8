@@ -47,7 +47,7 @@ RUN sbt graalvm-native-image:packageBin
 #
 # BUILT:
 #
-# (note: can be 'FROM scratch' and be smaller, as the native image is compatible.  Currently 'alpine' for usability.)
+# (note: can be 'FROM scratch' and be a few MB smaller, as the native image is compatible being a base-level docker image.  Currently running in 'alpine' for usability.)
 FROM alpine:3.10.3
 COPY --from=binarybuilder /build/target/graalvm-native-image/$name$ /opt/docker/$name$
 ENTRYPOINT ["/opt/docker/$name$"]
