@@ -1,5 +1,3 @@
-Global / onChangedBuildSource := ReloadOnSourceChanges
-
 ThisBuild / scalaVersion := "2.12.10"
 ThisBuild / organization := "$organization$"
 ThisBuild / maintainer := "$maintainer$"
