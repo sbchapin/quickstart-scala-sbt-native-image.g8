@@ -2,10 +2,9 @@
 
 An opinionated quickstart of a scala project that builds to a native binary without need for the JRE.
 
-By default, this will create a project containing only dependencies that compile on GraalVM, with exampls of the stuff you will very likely already have need for. _(Arg parsing, Logging, parallelism...)_
+By default, this will create a project containing only dependencies that compile on GraalVM, with examples of the stuff you will very likely already have need for. _(Arg parsing, Logging, parallelism...)_
 
-The intention is to use `sbt new` on this library's exterior g8 template, then trim it down to keeping only what you need.
-
+The intention is to use `sbt new` on [this library's exterior g8 template](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8), then trim it down to keeping only what you need.
 
 # Includes... #
 
@@ -14,14 +13,25 @@ The intention is to use `sbt new` on this library's exterior g8 template, then t
 - `sbt-native-packager` plugin for **building a linked binary** _(builds ahead-of-time using GraalVM statically linking and building all dependencies in a docker image via `sbt graalvm-native-image:packageBin`)_
 - `scalatest` for **testing** _(default test runner via `sbt test`)_
 - `sbt-scoverage` for **test coverage** _(statement-level coverage via `sbt coverage`)_
-- `scalalogging -> slf4j -> log4j2` for **logging** _(scala code -> interface -> mechanism)_
+- `scalalogging -> logback-classic` for **logging** _(`logback-classic` is used as a backend, but it is very easy to [replace this with something like log4j2](https://github.com/sbchapin/quickstart-scala-sbt.g8/blob/master/src/main/g8/build.sbt#L19))_
 - `scopt` for command-line **argument parsing**
 - `sbt-updates` for **keeping up-to-date** _(dependency updates via `sbt dependencyUpdates`)_
 - `sbt-dependency-graph` for **understanding your package** _(dependency graph via `sbt dependencyBrowseGraph` and dependency stats via `sbt dependencyStats`)_
 
-Check out the [Libs](#markdown-header-libs) below for more details on each.
+Check out the [Libs](#libs) below for more details on each.
 
 # How to... #
+
+## Prerequisites
+
+There are a couple of things you're probably gonna want to have installed on your machine before you go any further.
+
+- SBT: Used for building, testing and inspecting the project.
+    - Install on [OSX](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
+    - Install on [Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
+    - Install on [Linux](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
+- Docker: Used by the Graal Native Image SBT Plugin (configured in this project's `build.sbt` file) to create a native executable.
+    - Install via [Docker Desktop](https://hub.docker.com/?overlay=onboarding)
 
 ## Become an Olympic gymnast before you crawl: ##
 
@@ -261,13 +271,4 @@ object Main extends LazyLogging {
 
 ## Who do I talk to? ##
 
-- Email: chap.s.b@gmail.com
-- Github: https://github.com/sbchapin/
-- Bitbucket: https://bitbucket.org/sbchapin/
-- Discord: sbchapin#7435
-
-## What's the future of this repo? ##
-
-- Keep this baby up to date
-- More robust examples of the existing libraries
-- CI & CD Integrations
+This project was generated from [this quickstart](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8) by $maintainer$
