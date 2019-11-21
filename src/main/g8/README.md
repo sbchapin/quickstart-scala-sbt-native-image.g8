@@ -30,9 +30,12 @@ There are a couple of things you're probably gonna want to have installed on you
     - Install on [OSX](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
     - Install on [Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
     - Install on [Linux](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
-- Docker: Wraps the entire build process to make your life easier.
+- Docker: Wraps the entire build process to make your life easier. This means you don't need GraalVM or native-image in your environment.
     - Install via [Docker Desktop](https://hub.docker.com/?overlay=onboarding)
-    - If you only intend to run this project on your own machine (which you can do by [removing this line](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/blob/master/src/main/g8/build.sbt#L20)) you won't need Docker so feel free to skip this. 
+- OSX without Docker: If you intend to build this project to a binary on your machine rather than build it within Docker...
+    - Install [GraalVM CE](https://www.graalvm.org/docs/getting-started/) - or better yet - [install jabba](https://github.com/shyiko/jabba#installation) Java Version Manager to [install GraalVM](https://github.com/shyiko/jabba#usage)
+    - Install [native-image](https://www.graalvm.org/docs/reference-manual/native-image/) via `gu install native-image`
+    - [Remove this line](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/blob/master/src/main/g8/build.sbt#L20) if you are on OSX (linux environments with `libc` can leave it in)
 
 ## Become an Olympic gymnast before you crawl: ##
 
