@@ -13,7 +13,7 @@ The intention is to use `sbt new` on [this library's exterior g8 template](https
 - `sbt-native-packager` plugin for **building a linked binary** _(builds ahead-of-time using GraalVM statically linking and building all dependencies in a docker image via `sbt graalvm-native-image:packageBin`)_
 - `scalatest` for **testing** _(default test runner via `sbt test`)_
 - `sbt-scoverage` for **test coverage** _(statement-level coverage via `sbt coverage`)_
-- `scalalogging -> logback-classic` for **logging** _(`logback-classic` is used as a backend, but it is very easy to [replace this with something like log4j2](https://github.com/sbchapin/quickstart-scala-sbt.g8/blob/master/src/main/g8/build.sbt#L19))_
+- `scalalogging -> logback-classic` for **logging** _(`logback-classic` is used as a backend)_
 - `scopt` for command-line **argument parsing**
 - `sbt-updates` for **keeping up-to-date** _(dependency updates via `sbt dependencyUpdates`)_
 - `sbt-dependency-graph` for **understanding your package** _(dependency graph via `sbt dependencyBrowseGraph` and dependency stats via `sbt dependencyStats`)_
@@ -30,8 +30,9 @@ There are a couple of things you're probably gonna want to have installed on you
     - Install on [OSX](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html)
     - Install on [Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Windows.html)
     - Install on [Linux](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
-- Docker: Used by the Graal Native Image SBT Plugin (configured in this project's `build.sbt` file) to create a native executable.
+- Docker: Wraps the entire build process to make your life easier.
     - Install via [Docker Desktop](https://hub.docker.com/?overlay=onboarding)
+    - If you only intend to run this project on your own machine (which you can do by [removing this line](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/blob/master/src/main/g8/build.sbt#L20)) you won't need Docker so feel free to skip this. 
 
 ## Become an Olympic gymnast before you crawl: ##
 
@@ -206,18 +207,19 @@ object Main {
 
 ## [scala-logging](https://github.com/lightbend/scala-logging) - universal logging ##
 
-`scala-logging` is a logging adapter specific to Scala that uses the [slf4j logging interface](https://www.slf4j.org/manual.html).  In turn, that interface is hooked up to [Log4J as the logging mechanism](http://logging.apache.org/log4j/2.x/manual/layouts.html) (the thing that actually logs), which has been sensibly preconfigured.
+`scala-logging` is a logging adapter specific to Scala that uses the [slf4j logging interface](https://www.slf4j.org/manual.html).  In turn, that interface is hooked up to [logback as the logging mechanism](http://logback.qos.ch/) (the thing that actually logs), which has been sensibly preconfigured.
 
 ###### Why do we use it? ######
 
 - `scala-logging` gives you a limited subset of the functionality (only the stuff you need).
 - `scala-logging` is coupled tightly to scala, and thus is very performant, making use of scala macros to intelligently not log when the logging level is not requested.  This allows us to leave trace & debug logs everywhere we need them without worrying about performance.
 - Abstraction over `slf4j` allows the end-user to decide how they want to handle logs.
-- `Log4J2` can be drop-in-replaced - all of the dependencies are run-time.  If you want to use logback (or whatever logging mechanism), simply bring along the dependency in the environment you wish to run in, and configure it.
+- `logback-classic` can be drop-in-replaced - all of the dependencies are run-time.
+- If you want to use `Log4J2` (or another logging backend that relies heavily upon reflection), be warned that the SubstrateVM's "out of the box" configuration won't be enough and [you'll need to do some configuration first](https://github.com/oracle/graal/issues/808#issuecomment-470769285). If you don't absolutely need log4j2, you could simply wait for SubstrateVM's [automatic detection of reflection](https://github.com/oracle/graal/blob/master/substratevm/REFLECTION.md#automatic-detection) to be expanded upon so you can keep your project a little more lean in the meantime.     
 
 ###### How do we use it? ######
 
-- Modify `src/main/resource/log4j2.xml` to your desire for local development. It currently has good defaults for moderate log usage in production (20 files rotating, 25 MB max each, INFO level)
+- Modify `src/main/resources/logback.xml` to your desire. It currently has a basic, yet colorful, logger that simply prints TRACE level and above to the console.
 - Inherit `LazyLogger` to a class and use the logger (or don't).
 - Alternatively, instantiate a new Logger and pass it a name or a class.
 
