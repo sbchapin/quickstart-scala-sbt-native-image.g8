@@ -10,10 +10,14 @@ This information will come along with the template, so __you may just want to ge
 # To get started immediately: #
 
 ```bash
+# sbt < 1.3.0
 sbt new sbchapin/quickstart-scala-sbt-native-image.g8
+
+# sbt >= 1.3.0 (https://github.com/sbt/sbt/issues/5063)
+sbt --supershell=false new sbchapin/quickstart-scala-sbt-native-image.g8
 ```
 
-Execute the preceding `sbt` command wherever you want to start a new scala-sbt project.  **It will create a new folder in your active directory.**
+Execute the preceding `sbt` command wherever you want to start a new scala-sbt project.  **It will create a new folder in your active directory.** 
 
 It will ask you four questions:
 
@@ -54,6 +58,12 @@ git push origin cool-feature-branch
 # Pull request it:
 # https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/pulls
 ```
+
+## Roadmap
+
+- Keep this baby up to date
+- More robust examples of the existing libraries
+- CI & CD Integrations
 
 ## LICENSE ##
 This template is distributed without any warranty and dedicated to public domain under the CC0 1.0 Universal (CC0 1.0) Public Domain Dedication license.

@@ -28,8 +28,8 @@ lazy val root = (project in file("."))
 
     // Logging:
     libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3",
+    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3", // See README.md for why we don't use log4j2
 
     // Testing:
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test,
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
   )
