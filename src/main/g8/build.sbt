@@ -20,7 +20,7 @@ lazy val root = (project in file("."))
         "--static" // Disable for OSX (non-docker) builds - Forces statically-linked binary, compatible with libc (linux)
     ),
 
-    // JSON parser, with opinions:
+    // Concurrency:
     libraryDependencies += "io.monix" %% "monix" % "3.1.0",
 
     // Arg Parsing:
