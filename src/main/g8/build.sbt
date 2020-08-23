@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
     ),
 
     // Concurrency:
-    libraryDependencies += "io.monix" %% "monix" % "3.1.0",
+    libraryDependencies += "io.monix" %% "monix" % "3.2.2",
 
     // Arg Parsing:
     libraryDependencies += "com.github.scopt" %% "scopt" % "4.0.0-RC2",

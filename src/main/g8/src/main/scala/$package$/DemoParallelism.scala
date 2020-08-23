@@ -41,7 +41,7 @@ object DemoParallelism extends LazyLogging {
     // The list of all tasks needed for execution:
     val tasks = for { _ <- 0L until iterations } yield detectCircularity
     // Gathering tasks, then summing the final result:
-    val aggregate = Task.gather(tasks).map(_.sum)
+    val aggregate = Task.parSequence(tasks).map(_.sum)
     // Calculating pi from the aggregate:
     aggregate.map { 4.0 * _ / (iterations - 1) }
   }
