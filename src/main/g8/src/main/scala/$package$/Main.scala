@@ -1,7 +1,11 @@
 package $package$
 
+import cats.effect.ExitCode
 import $package$.args.Args
 import $package$.args.Command.{Hi, Pi}
+import com.typesafe.scalalogging.LazyLogging
+import monix.eval.{Task, TaskApp}
+import monix.execution.Scheduler
 
 /**
   * Various demos of what a native-image can do, including...
@@ -12,16 +16,22 @@ import $package$.args.Command.{Hi, Pi}
   * @author sbchapin
   * @since 11/11/19.
   */
-object Main {
+object Main extends TaskApp with LazyLogging {
 
-  /**
-    * Entrypoint
-    */
-  def main(rawArgs: Array[String]): Unit = {
-    Args.parse(rawArgs) {
-      case Args(Hi(n))    => DemoLogging(name = n)
-      case Args(Pi(i, p)) => DemoParallelism(iterations = i, parallelism = p)
+  override protected def scheduler: Scheduler = Scheduler.computation()
+
+  override def run(rawArgs: List[String]): Task[ExitCode] = {
+    val appTask = Args.parse(rawArgs) {
+      case Args(Hi(n)) =>
+        DemoLogging(name = n)
+      case Args(Pi(i, p)) =>
+        DemoParallelism(iterations = i, parallelism = p)
+    }.getOrElse(Task.unit)
+
+    for {
+      _ <- appTask.void
+    } yield {
+      ExitCode.Success
     }
   }
 }
-
