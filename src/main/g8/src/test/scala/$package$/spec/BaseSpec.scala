@@ -1,6 +1,6 @@
 package $package$.spec
 
-import org.scalatest.FunSpec
+import org.scalatest.funspec.AnyFunSpec
 
 /**
   * This should be the base-level class to guarantee congruency among specs across your tests.
@@ -16,4 +16,4 @@ import org.scalatest.FunSpec
   * @author sbchapin
   * @since 11/11/19.
   */
-trait BaseSpec extends FunSpec
+trait BaseSpec extends AnyFunSpec
