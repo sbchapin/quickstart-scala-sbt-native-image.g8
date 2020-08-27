@@ -18,8 +18,6 @@ import monix.execution.Scheduler
   */
 object Main extends TaskApp with LazyLogging {
 
-  override protected def scheduler: Scheduler = Scheduler.computation()
-
   override def run(rawArgs: List[String]): Task[ExitCode] = {
     val appTask = Args.parse(rawArgs) {
       case Args(Hi(n)) =>
