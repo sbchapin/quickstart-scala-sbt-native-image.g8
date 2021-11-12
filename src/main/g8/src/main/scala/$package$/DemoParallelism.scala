@@ -41,8 +41,7 @@ object DemoParallelism extends LazyLogging {
     })
 
     // log the results
-    timeTook = calculate._1
-    pi = calculate._2
+    (timeTook, pi) = calculate
     _ <- Task {
       logger.info(s"Pi is roughly \${pi}. (Took \${timeTook.toMillis}ms)")
     }
