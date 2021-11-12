@@ -36,7 +36,7 @@ object DemoParallelism extends LazyLogging {
         .timed
         // set a timeout of 30 seconds
         .timeout(30.seconds)
-        // insure the process runs on the provided scheduler
+        // ensure the process runs on the provided scheduler
         .executeOn(scheduler)
     })
 
