@@ -8,13 +8,13 @@ The intention is to use `sbt new` on [this library's exterior g8 template](https
 
 # Includes... #
 
-- `Scala 2.12` for **coding**
+- `Scala 2.13` for **coding**
 - `sbt 1.+` for **building**
 - `sbt-native-packager` plugin for **building a linked binary** _(builds ahead-of-time using GraalVM statically linking and building all dependencies in a docker image via `sbt graalvm-native-image:packageBin`)_
 - `scalatest` for **testing** _(default test runner via `sbt test`)_
 - `sbt-scoverage` for **test coverage** _(statement-level coverage via `sbt coverage`)_
 - `scalalogging -> logback-classic` for **logging** _(`logback-classic` is used as a backend)_
-- `scopt` for command-line **argument parsing**
+- `decline` for command-line **argument parsing**
 - `sbt-updates` for **keeping up-to-date** _(dependency updates via `sbt dependencyUpdates`)_
 - `sbt-dependency-graph` for **understanding your package** _(dependency graph via `sbt dependencyBrowseGraph` and dependency stats via `sbt dependencyStats`)_
 
@@ -152,14 +152,13 @@ Below are the libraries used to provide a broad starting base for this project.
 - sbt plugin [sbt-scoverage](https://github.com/scoverage/sbt-scoverage) allows us to run scoverage on top of the sbt test task. Due to scalatest being the default test runner, this will run scoverage with scalatest via `sbt coverage test` or `sbt coverageReport`
 - HTML and XML Reports are generated via `sbt coverageReport`, and are dumped in `target/scala*/?coverage-report/`
 
+## [decline](https://github.com/bkirwi/decline) - argument parsing ##
 
-
-## [scopt](https://github.com/scopt/scopt) - argument parsing ##
-
-`scopt` is a framework that allows succinct and powerful command-line argument parsing.
+`decline` is a framework that allows succinct and powerful command-line argument parsing.
 
 ###### Why do we use it? ######
 
+- Integrates really well with cats-effect via [CommandIOApp](https://ben.kirw.in/decline/effect.html#interpreting-our-command-line-interface)
 - Parsing arguments is a chore that has been solved.
 - Self-documenting with standardization.
 - Makes it easy to simultaneously standardize, document, validate, and parse.
@@ -173,39 +172,26 @@ Below are the libraries used to provide a broad starting base for this project.
 
 `src/main/scala/com/example/Main.scala`:
 ```scala
-import scopt.OptionParser
+import cats.implicits._
+import com.monovore.decline._
 
-object Main {
+object HelloWorld extends CommandApp(
+  name = "hello-world",
+  header = "Says hello!",
+  main = {
+    val userOpt =
+      Opts.option[String]("target", help = "Person to greet.")
+              .withDefault("world")
 
-  final case class OurArguments(maybeName: Option[String] = None)
+    val quietOpt = Opts.flag("quiet", help = "Whether to be quiet.").orFalse
 
-  object ArgParser extends OptionParser[OurArguments]("project-name") {
+    (userOpt, quietOpt).mapN { (user, quiet) =>
 
-    head("program description goes here")
-
-    help("help").text("prints this usage text")
-
-    opt[String]('n', "name")
-      .text("Add a description for the name argument")
-      .optional() // signifies this is not a required argument
-      .validate( name => if (name == "sam") failure("name can't be 'sam'") else success )
-      .action( (newName, conf) => conf.copy(maybeName = Some(newName)) )
-  }
-
-  def main(args: Array[String]) {
-    val defaultArguments = OurArguments()
-
-    val maybeParsedArgs: Option[OurArguments] = ArgParser.parse(args, defaultArguments)
-
-    maybeParsedArgs match {
-      case Some(parsedArgs) =>
-        // Go nuts
-      case None =>
-        ArgParser.showUsageAsError()
-        // Exit, log it, report it, whatever.
+      if (quiet) println("...")
+      else println(s"Hello $user!")
     }
   }
-}
+)
 ```
 
 ## [scala-logging](https://github.com/lightbend/scala-logging) - universal logging ##

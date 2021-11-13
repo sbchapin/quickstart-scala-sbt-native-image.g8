@@ -7,7 +7,7 @@ import $package$.args.{Args, Cmd}
 
 /**
  * Various demos of what a native-image can do, including...
- * - Typesafe arg parsing using Scopt
+ * - Typesafe arg parsing using Decline
  * - Configurable logging interface using Scalalogging and underlying Logback mechanism
  * - Async & parallelization using Monix
  *
