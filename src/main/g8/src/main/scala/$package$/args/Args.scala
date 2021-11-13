@@ -1,44 +1,46 @@
 package $package$.args
 
-import $package$.args.Command.{Hi, Pi}
-import scopt.OParser
-
-/** Full representation of potential args for [[$package$.Main]] */
-case class Args(cmd: Command)
+import cats.implicits.catsSyntaxTuple2Semigroupal
+import com.monovore.decline.{Command, Opts}
+import $package$.args.Cmd.{Hi, Pi}
 
 object Args {
 
-  def parse[T](args: Seq[String])(handleArgs: PartialFunction[Args, T]): Option[T] = {
-    val parsed = OParser.parse[Args](parser, args, Args(Command.Empty))
-    val breakEmptyArgs: PartialFunction[Args, T] = {
-      case Args(Command.Empty) => throw new NotImplementedError(s"No command passed - must provide command.")
+  /**
+   * Arguments for the "pi" command
+   */
+  private val piCommand: Command[Cmd] = Command(
+    name = "pi",
+    header = "Demonstrate parallelism by approximating pi."
+  ) {
+    val iterationsOpt = Opts.option[Long](long = "iterations", short = "i", help = "Number of iterations. The higher this is, the more accurate (and expensive) the calculation becomes.")
+      .withDefault(Defaults.Pi.iterations)
+
+    val parallelismOpt = Opts.option[Int](long = "parallelism", short = "p", help = "Maximum allowed number of parallel calculations.")
+      .withDefault(Defaults.Pi.parallelism)
+
+    (iterationsOpt, parallelismOpt).mapN { (iterations, parallelism) =>
+      Pi(iterations, parallelism)
     }
-    parsed.map(handleArgs orElse breakEmptyArgs)
   }
 
-  /** Arg Parser */
-  val parser: OParser[Unit, Args] = {
-    val builder = OParser.builder[Args]
-    import builder._
-    OParser.sequence(
-      programName("$name$"),
-      head("$name$"),
-      cmd("pi")
-        .text("Demonstrate parallelism by approximating pi.")
-        .action((_, args) => args.copy(cmd = Pi(Defaults.Pi.iterations, Defaults.Pi.parallelism)))
-        .children(
-          opt[Long]('i', "iterations")
-            .action { case (x, args @ Args(cmd: Pi)) => args.copy(cmd = cmd.copy(iterations = x)) },
-          opt[Int]('p', "parallelism")
-            .action { case (x, args @ Args(cmd: Pi)) => args.copy(cmd = cmd.copy(parallelism = x)) }
-        ),
-      cmd("hi")
-        .text("Demonstrate levels of logging via slf4j -> logback.")
-        .action((_, args) => args.copy(cmd = Hi(Defaults.Hi.name)))
-        .children(
-          opt[String]('n', "name")
-            .action { case (x, args @ Args(cmd: Hi)) => args.copy(cmd = cmd.copy(name = x)) }
-        )
-    )
+  /**
+   * Arguments for the "hi" command
+   */
+  private val hiCommand: Command[Cmd] = Command(
+    name = "hi",
+    header = "Demonstrate levels of logging via slf4j -> logback by printing a greeting."
+  ) {
+    val nameOpt =
+      Opts.option[String](long = "name", short = "n", help = "Name to generate a greeting for.").withDefault(Defaults.Hi.name)
+
+    nameOpt.map {
+      name => Hi(name)
+    }
   }
+
+  /**
+   * Arguments for all commands combined into one!
+   */
+  val allCommands: Opts[Cmd] = Opts.subcommands(piCommand, hiCommand)
 }
