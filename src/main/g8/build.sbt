@@ -19,7 +19,7 @@ lazy val root = (project in file("."))
         "--no-server", // Won't be running `graalvm-native-image:packageBin` often, so one less thing to break
         "--static", // Disable for OSX (non-docker) builds - Forces statically-linked binary, compatible with libc (linux)
         "--initialize-at-build-time=" + Seq( // Auto-packs dependent libs at build-time
-            "$package$.Main",
+            "$package$",
             // "some.class.with.long.initialization.Time"
         ).mkString(",")
     ),

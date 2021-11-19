@@ -1,11 +1,9 @@
 package $package$
 
-import cats.effect.testing.scalatest.AsyncIOSpec
 import $package$.DemoParallelism
 import $package$.spec.BaseSpec
 
 import scala.concurrent.duration._
-import scala.concurrent.Await
 
 class ParallelismSpec extends BaseSpec {
 
