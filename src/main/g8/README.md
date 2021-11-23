@@ -152,6 +152,26 @@ Below are the libraries used to provide a broad starting base for this project.
 - sbt plugin [sbt-scoverage](https://github.com/scoverage/sbt-scoverage) allows us to run scoverage on top of the sbt test task. Due to scalatest being the default test runner, this will run scoverage with scalatest via `sbt coverage test` or `sbt coverageReport`
 - HTML and XML Reports are generated via `sbt coverageReport`, and are dumped in `target/scala*/?coverage-report/`
 
+
+
+## [scalafmt](https://scalameta.org/scalafmt/) - *(automatic)* code formatting ##
+
+`scalafmt` is a scala code formatter. It integrates directly into the interpreter and can use the full power of scala's symbolic interpretation, enabling [all sorts of crazy configurations](https://scalameta.org/scalafmt/docs/configuration.html).  What's important here is consistency, so we enforce it with scalafmt.
+
+###### Why do we use it? ######
+
+- Automatic formatting means you just slap that save button and let the interpreter and scalafmt do the rest
+- Consistent formatting ensured, ruled by the iron fist of your CI system
+- Less arguing and nitpicking - your S.O. won't dump you because you use spaces rather than tabs
+
+###### How do we use it? ######
+
+- For normal development, [it's integrated with your editor](https://scalameta.org/scalafmt/docs/installation.html)
+- sbt plugin [sbt-scoverage](https://github.com/scoverage/sbt-scoverage) allows us to run scalafmt to check format for tasks like CI, or to actually perform the formatting via `sbt scalafmtCheckAll` and `sbt scalafmtAll` respectively
+- Experiment with the highly-configurable and flexible `./.scalafmt.conf` to see what feels right for you
+
+
+
 ## [decline](https://github.com/bkirwi/decline) - argument parsing ##
 
 `decline` is a framework that allows succinct and powerful command-line argument parsing.
