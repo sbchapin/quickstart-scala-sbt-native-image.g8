@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        scala: [ 2.11.12, 2.12.15, 2.13.7 ]
+        scala: [ 2.12.0, 2.12 ]
         java: [ adopt@1.8 ]
     runs-on: ${{ matrix.os }}
     steps:
