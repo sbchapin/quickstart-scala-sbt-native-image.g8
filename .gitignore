@@ -1,10 +1,17 @@
-# Mac files
+# OSX
 *.DS_Store
 
-# build files
+# SBT Build
 target/
 
-# Intellij
+# Metals Build
+.bloop
+.bsp
+.metals
+metals.sbt
+
+# IDEs/editors
+.vscode
 .idea
 *.iml
 *.ipr

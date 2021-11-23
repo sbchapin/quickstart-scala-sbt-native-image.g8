@@ -1,10 +1,10 @@
-# OSX Files
+# OSX
 *.DS_Store
 
 # Logs
 *.log
 
-# Build files
+# SBT Build
 /classes/
 /build/
 /bin/
@@ -14,7 +14,14 @@ target/
 *.jar
 *.class
 
-# Intellij
+# Metals Build
+.bloop
+.bsp
+.metals
+metals.sbt
+
+# IDEs/editors
+.vscode
 .idea
 *.iml
 *.ipr
