@@ -1,6 +1,7 @@
 # A [Giter8 template](http://www.foundweekends.org/giter8/Combined+Pages.html#Usage) for native-image-producing JRE-less scala-sbt starter code [for usage with sbt new](https://www.scala-sbt.org/1.x/docs/sbt-new-and-Templates.html) #
 
-[![Build Status](https://travis-ci.org/sbchapin/quickstart-scala-sbt-native-image.g8.svg?branch=master)](https://travis-ci.org/sbchapin/quickstart-scala-sbt-native-image.g8)
+[![Continuous Integration](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/actions/workflows/ci.yml)
+
 
 For more information (quite a lot of information) about what's included in this quickstart, [refer to /src/main/g8/README.md](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/blob/master/src/main/g8/).
 
