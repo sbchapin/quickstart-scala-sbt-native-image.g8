@@ -12,15 +12,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ ubuntu-latest, windows-latest ]
         scala: [ 2.12.0, 2.12.15 ]
         java: [ adopt@1.8, adopt@1.11, graalvm-ce-java11@21.1.0 ]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout current branch (full)
+
+      - name: Configure git
+        run: "git config --global core.autocrlf false"
+        shell: bash
+
+      - name: Checkout current branch (partial, up to 100 depth)
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 100
 
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@v12
@@ -41,3 +46,4 @@ jobs:
 
       - name: Test the template
         run: sbt --client '++${{ matrix.scala }}; test'
+        shell: bash
