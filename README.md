@@ -20,7 +20,7 @@ sbt --supershell=false new sbchapin/quickstart-scala-sbt-native-image.g8
 
 Execute the preceding `sbt` command wherever you want to start a new scala-sbt project.  **It will create a new folder in your active directory.** 
 
-It will ask you four questions:
+It will ask you three questions:
 
 - `name` - _will be formatted to the correct type in necessary places (META-INF, packages, README...)_
 - `organization` - _must be in the reverse-namespace format._
