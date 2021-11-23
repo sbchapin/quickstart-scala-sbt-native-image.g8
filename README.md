@@ -24,7 +24,6 @@ It will ask you four questions:
 - `name` - _will be formatted to the correct type in necessary places (META-INF, packages, README...)_
 - `organization` - _must be in the reverse-namespace format._
 - `package` - _must be in the reverse-namespace format (will default to the last two fields intelligently.)_
-- `maintainer` - _include name and email for docker and scala artifacts._
 
 
 ## Requires: ##

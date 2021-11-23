@@ -18,8 +18,6 @@
 # Use a dockerized native builder
 FROM ghcr.io/graalvm/graalvm-ce:java11-21.3.0 as binarybuilder
 
-MAINTAINER $maintainer$
-
 # Install native-image so we can emit a pre-built statically-linked binary
 RUN gu install native-image
 

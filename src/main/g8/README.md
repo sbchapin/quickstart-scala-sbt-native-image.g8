@@ -51,7 +51,7 @@ Test, compile ahead-of-time, and statically link an executable:
 ```sh
 docker build -t $name$ .
 docker run $name$ --help
-docker run $name$ hi -n '$maintainer$'
+docker run $name$ hi -n '$name$'
 docker run $name$ pi --iterations 100000 --parallelism 10
 # ...or if on linux (or other libc system)...
 sbt graalvm-native-image:packageBin # binary created under target/graalvm-native-image/$name$\
@@ -282,4 +282,4 @@ object Main extends LazyLogging {
 
 ## Who do I talk to? ##
 
-This project was generated from [this quickstart](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8) by $maintainer$
+This project was generated from [this quickstart](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8)

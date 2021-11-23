@@ -1,6 +1,5 @@
 ThisBuild / scalaVersion := "2.13.7"
 ThisBuild / organization := "$organization$"
-ThisBuild / maintainer   := "$maintainer$"
 ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 ThisBuild / javacOptions ++= Seq("-source", "11", "-target", "11", "-Xlint")
 
