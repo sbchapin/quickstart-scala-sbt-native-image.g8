@@ -11,10 +11,10 @@ This information will come along with the template, so __you may just want to ge
 # To get started immediately: #
 
 ```bash
-# sbt < 1.3.0
+# sbt before 1.3.0 or after 1.4.2
 sbt new sbchapin/quickstart-scala-sbt-native-image.g8
 
-# sbt >= 1.3.0 (https://github.com/sbt/sbt/issues/5063)
+# sbt between 1.3.0 and 1.4.2  (https://github.com/sbt/sbt/issues/5063)
 sbt --supershell=false new sbchapin/quickstart-scala-sbt-native-image.g8
 ```
 
@@ -41,13 +41,13 @@ git clone git@github.com:{YOUR_NAME_HERE}/quickstart-scala-sbt-native-image.g8.g
 cd quickstart-scala-sbt-native-image.g8
 git remote add upstream git@github.com:sbchapin/quickstart-scala-sbt-native-image.g8.git
 
-# Test it continuously: (will extract the project then run tests inside extracted project)
+# Test it continuously: (will extract the project then run tests inside extracted project as well as checking code formatting)
 sbt ~test
 
 # Change it:
 git checkout -b cool-feature-branch
-echo 'Sam sucks' >> README.md
-git commit -am 'Stating the evident'
+echo 'Cool feature' >> README.md
+git commit -am 'Added something!'
 
 # Test it one last time:
 sbt test
@@ -63,7 +63,6 @@ git push origin cool-feature-branch
 
 - Keep this baby up to date
 - More robust examples of the existing libraries
-- CI & CD Integrations
 
 ## LICENSE ##
 This template is distributed without any warranty and dedicated to public domain under the CC0 1.0 Universal (CC0 1.0) Public Domain Dedication license.
