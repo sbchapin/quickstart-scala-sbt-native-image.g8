@@ -36,7 +36,7 @@ class ArgsSpec extends BaseSpec {
 
       it("should parse known parameter '--name' and '-n'") {
         val short = parse("hi", "-n", "valid-name")
-        val long = parse("hi", "--name", "valid-name")
+        val long  = parse("hi", "--name", "valid-name")
         assert(short == long && short === Right(Cmd.Hi("valid-name")))
       }
     }
@@ -49,13 +49,13 @@ class ArgsSpec extends BaseSpec {
 
       it("should parse known parameter '--iterations' and '-i'") {
         val short = parse("pi", "-i", "42")
-        val long = parse("pi", "--iterations", "42")
+        val long  = parse("pi", "--iterations", "42")
         assert(short == long && short.contains(Cmd.Pi(42, Defaults.Pi.parallelism)))
       }
 
       it("should parse known parameter '--parallelism' and '-p'") {
         val short = parse("pi", "-p", "13")
-        val long = parse("pi", "--parallelism", "13")
+        val long  = parse("pi", "--parallelism", "13")
         assert(short == long && short.contains(Cmd.Pi(Defaults.Pi.iterations, 13)))
       }
     }

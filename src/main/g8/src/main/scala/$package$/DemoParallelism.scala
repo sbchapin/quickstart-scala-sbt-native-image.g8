@@ -7,12 +7,13 @@ import com.typesafe.scalalogging.LazyLogging
 
 object DemoParallelism extends LazyLogging {
 
-  /**
-   * Demonstrates effective parallelism using Monix and Monte-Carlo pi calculation.
-   *
-   * @param iterations  Iterations to calculate pi for
-   * @param parallelism Concurrent processes
-   */
+  /** Demonstrates effective parallelism using Monix and Monte-Carlo pi calculation.
+    *
+    * @param iterations
+    *   Iterations to calculate pi for
+    * @param parallelism
+    *   Concurrent processes
+    */
   def apply(iterations: Long, parallelism: Int): IO[ExitCode] = {
     // Approximation of pi using iteration:
     val piApproximation = approximatePi(parallelism - 1, iterations)
@@ -20,16 +21,22 @@ object DemoParallelism extends LazyLogging {
     piApproximation.as(ExitCode.Success)
   }
 
-
-  /**
-   * Approximate pi via [[https://en.wikipedia.org/wiki/Approximations_of_%CF%80#Summing_a_circle's_area Monte Carlo method]].
-   *
-   * @parallelism Concurrent processes
-   * @iterations Iterations to calculate pi for
-   * @seed for randomness
-   */
+  /** Approximate pi via
+    * [[https://en.wikipedia.org/wiki/Approximations_of_%CF%80#Summing_a_circle's_area Monte Carlo method]].
+    *
+    * @param parallelism
+    *   Concurrent processes
+    * @param iterations
+    *   Iterations to calculate pi for
+    * @param seed
+    *   for randomness
+    */
   def approximatePi(parallelism: Int, iterations: Long, seed: Int = 13): IO[Double] = for {
-    _ <- IO { logger.info(f"Will approximate Pi with \$iterations%,d iterations of random bubble-filling and \$parallelism%,d parallel processes...") }
+    _ <- IO {
+      logger.info(
+        f"Will approximate Pi with \$iterations%,d iterations of random bubble-filling and \$parallelism%,d parallel processes..."
+      )
+    }
 
     // create random number generator
     random <- scalaUtilRandomSeedInt[IO](seed)
