@@ -16,7 +16,7 @@
 # BUILDER:
 #
 # Use a dockerized native builder
-FROM oracle/graalvm-ce:20.2.0 as binarybuilder
+FROM ghcr.io/graalvm/graalvm-ce:java11-21.3.0 as binarybuilder
 
 MAINTAINER $maintainer$
 
