@@ -1,6 +1,6 @@
 # check if the basic files are created
-$ exists src/main/scala/com/sbchapin/examplescalasbtnativeimage/DemoParallelism.scala
-$ exists src/test/scala/com/sbchapin/examplescalasbtnativeimage/ParallelismSpec.scala
+$ exists app/src/main/scala/com/sbchapin/examplescalasbtnativeimage/DemoParallelism.scala
+$ exists app/src/test/scala/com/sbchapin/examplescalasbtnativeimage/ParallelismSpec.scala
 $ exists build.sbt
 $ exists README.md
 
