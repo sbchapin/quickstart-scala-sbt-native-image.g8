@@ -64,7 +64,7 @@ jobs:
         shell: bash
 
       - name: Performance benchmarks
-        if: ${{ matrix.java == 'adopt@1.8' or matrix.java == 'adopt@1.11' }} # JMH must use OpenJDK for accuracy
+        if: ${{ matrix.java == 'adopt@1.8' || matrix.java == 'adopt@1.11' }} # JMH must use OpenJDK for accuracy
         working-directory: ./templated-under-test
         run: sbt --client '++${{ matrix.scala }}; benchmarks/Jmh/run"
         shell: bash
