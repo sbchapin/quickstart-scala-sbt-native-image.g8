@@ -11,4 +11,4 @@ $ exists README.md
 > scalafmtCheckAll
 
 # run benchmarks
-> bench / Jmh / run
+> benchmarks / Jmh / run

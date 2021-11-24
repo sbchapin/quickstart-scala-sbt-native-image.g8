@@ -4,18 +4,7 @@ ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xf
 ThisBuild / javacOptions ++= Seq("-source", "11", "-target", "11", "-Xlint")
 
 lazy val root = (project in file("."))
-  .aggregate(app, bench)
-
-lazy val bench = (project in file("bench"))
-  .enablePlugins(JmhPlugin)
-  .dependsOn(app)
-  .settings(
-    javaOptions ++= Seq(
-      "-Dcats.effect.tracing.mode=none",
-      "-Dcats.effect.tracing.exceptions.enhanced=false",
-      "-Droot-log-level=ERROR"
-    )
-  )
+  .aggregate(app, benchmarks)
 
 lazy val app = (project in file("app"))
   .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin)
@@ -48,4 +37,15 @@ lazy val app = (project in file("app"))
     // Testing:
     libraryDependencies += "org.scalatest" %% "scalatest"                     % "3.2.9" % Test,
     libraryDependencies += "org.typelevel" %% "cats-effect-testing-scalatest" % "1.3.0" % Test
+  )
+
+lazy val benchmarks = (project in file("benchmarks"))
+  .enablePlugins(JmhPlugin)
+  .dependsOn(app)
+  .settings(
+    javaOptions ++= Seq(
+      "-Dcats.effect.tracing.mode=none",
+      "-Dcats.effect.tracing.exceptions.enhanced=false",
+      "-Droot-log-level=ERROR"
+    )
   )
