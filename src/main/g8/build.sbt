@@ -1,3 +1,12 @@
+// Handy commands:
+//   sbt test
+//   sbt testQuick
+//   sbt ~testQuick
+//   sbt compile
+//   sbt app/assembly
+//   sbt app/graalvm-native-image:packageBin
+//   sbt benchmarks/Jmh/run
+
 ThisBuild / scalaVersion := "2.13.7"
 ThisBuild / organization := "$organization$"
 ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
@@ -44,8 +53,8 @@ lazy val benchmarks = (project in file("benchmarks"))
   .dependsOn(app)
   .settings(
     javaOptions ++= Seq(
-      "-Dcats.effect.tracing.mode=none",
-      "-Dcats.effect.tracing.exceptions.enhanced=false",
-      "-Droot-log-level=ERROR"
+      "-Dcats.effect.tracing.mode=none",                 // Prevent cats from tracing fibers
+      "-Dcats.effect.tracing.exceptions.enhanced=false", // Prevent cats from adding exception handlers
+      "-Droot-log-level=ERROR"                           // Set the log-level low so that JMH outputs are not polluted
     )
   )
