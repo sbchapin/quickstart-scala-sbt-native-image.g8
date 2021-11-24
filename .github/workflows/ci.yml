@@ -49,7 +49,7 @@ jobs:
         shell: bash
 
       - name: Use the template
-        run: sbt --client "++${{ matrix.scala }}; new file://`pwd` --name=materialized-template --force"
+        run: sbt "++${{ matrix.scala }}; new file://`pwd` --name=materialized-template --force"
         shell: bash
 
       - name: Fat jar
