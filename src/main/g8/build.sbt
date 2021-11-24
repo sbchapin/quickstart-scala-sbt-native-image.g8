@@ -8,6 +8,14 @@ lazy val root = (project in file("."))
 
 lazy val bench = (project in file("bench"))
   .enablePlugins(JmhPlugin)
+  .dependsOn(app)
+  .settings(
+    javaOptions ++= Seq(
+      "-Dcats.effect.tracing.mode=none",
+      "-Dcats.effect.tracing.exceptions.enhanced=false",
+      "-Droot-log-level=ERROR"
+    )
+  )
 
 lazy val app = (project in file("app"))
   .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin)
