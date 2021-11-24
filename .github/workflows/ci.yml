@@ -57,14 +57,16 @@ jobs:
         run: sbt --client '++${{ matrix.scala }}; app/assembly"
         shell: bash
 
+        # Graal packaging must use only Unix for libc bindings
       - name: Native package
-         if: ${{ matrix.os == 'ubuntu-latest' }} # Graal packaging must use Unix for libc bindings
+         if: ${{ matrix.os == 'ubuntu-latest' }}
         working-directory: ./templated-under-test
         run: sbt --client '++${{ matrix.scala }}; app/graalvm-native-image:packageBin"
         shell: bash
 
+        # JMH must use OpenJDK for accuracy
       - name: Performance benchmarks
-        if: ${{ matrix.java == 'adopt@1.8' }} # JMH must use OpenJDK for accuracy
+        if: ${{ matrix.java == 'adopt@1.8' or matrix.java == 'adopt@1.11' }}
         working-directory: ./templated-under-test
         run: sbt --client '++${{ matrix.scala }}; benchmarks/Jmh/run"
         shell: bash
