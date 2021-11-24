@@ -136,6 +136,26 @@ Below are the libraries used to provide a broad starting base for this project.
 
 
 
+## [jmh](https://github.com/openjdk/jmh) - performance (micro)benchmarking ##
+
+`jmh` is a microbenching runner and harness (like a test framework, but for measuring and reporting rather than qualifying & asserting). 
+
+###### Why do we use it? ######
+
+- To gauge performance bottlenecks in isolation under a variety of circumstances
+- To tightly integrate with parts of your program and performance test them thoroughly
+- To win arguments with friends
+
+###### How do we use it? ######
+
+- SBT and [the sbt-jmh plugin](https://github.com/sbt/sbt-jmh) allow us to run via `sbt benchmarks/Jmh/run`
+- The `./benchmarks` subproject contains JMH benchmarks that test components of the project, add new benchmarks there
+  - Any `./app` code is available to test directly
+  - If you are measuring performance on the larger scale (milliseconds and beyond), use [example benchmarks](https://github.com/sbt/sbt-jmh/tree/main/plugin/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples) as good starting points for JMH tests
+  - If you are measuring performance on the small-scale (nanoseconds), [read this first](https://shipilev.net/blog/2014/nanotrusting-nanotime/) to ensure you are doing so correctly and reasoning about your results appropriately
+
+
+
 ## [scoverage](https://github.com/scoverage/sbt-scoverage) - coverage ##
 
 `scoverage` is a sbt plugin that works in conjunction with scalatest that allows the generation of "coverage reports".  Coverage reports allow us to see what portions of our codebase have been hit by tests.  Most importantly, scoverage generates reports at a statement-level, so things like anonymous functions are checked for usage correctly.
