@@ -9,3 +9,6 @@ $ exists README.md
 
 # run scalafmt to check that everything is formatted
 > scalafmtCheckAll
+
+# run benchmarks
+> bench / Jmh / run
