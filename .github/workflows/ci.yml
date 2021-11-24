@@ -49,22 +49,22 @@ jobs:
         shell: bash
 
       - name: Use the template
-        run: sbt --client "++${{ matrix.scala }}; new file://`pwd`" --name=templated-under-test --force
+        run: sbt --client "++${{ matrix.scala }}; new file://`pwd` --name=materialized-template --force"
         shell: bash
 
       - name: Fat jar
-        working-directory: ./templated-under-test
-        run: sbt --client '++${{ matrix.scala }}; app/assembly"
+        working-directory: ./materialized-template
+        run: sbt --client '++${{ matrix.scala }}; app/assembly'
         shell: bash
 
       - name: Native package
         if: ${{ matrix.os == 'ubuntu-latest' }} # Graal packaging must use only Unix for libc bindings
-        working-directory: ./templated-under-test
-        run: sbt --client '++${{ matrix.scala }}; app/graalvm-native-image:packageBin"
+        working-directory: ./materialized-template
+        run: sbt --client '++${{ matrix.scala }}; app/graalvm-native-image:packageBin'
         shell: bash
 
       - name: Performance benchmarks
         if: ${{ matrix.java == 'adopt@1.8' || matrix.java == 'adopt@1.11' }} # JMH must use OpenJDK for accuracy
-        working-directory: ./templated-under-test
-        run: sbt --client '++${{ matrix.scala }}; benchmarks/Jmh/run"
+        working-directory: ./materialized-template
+        run: sbt --client '++${{ matrix.scala }}; benchmarks/Jmh/run'
         shell: bash
