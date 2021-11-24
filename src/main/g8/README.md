@@ -35,7 +35,6 @@ There are a couple of things you're probably gonna want to have installed on you
 - OSX without Docker: If you intend to build this project to a binary on your machine rather than build it within Docker...
     - Install [GraalVM CE](https://www.graalvm.org/docs/getting-started/) - or better yet - [install jabba](https://github.com/shyiko/jabba#installation) Java Version Manager to [install GraalVM](https://github.com/shyiko/jabba#usage)
     - Install [native-image](https://www.graalvm.org/docs/reference-manual/native-image/) via `gu install native-image`
-    - [Remove this line](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/blob/master/src/main/g8/build.sbt#L20) if you are on OSX (linux environments with `libc` can leave it in)
 
 ## Become an Olympic gymnast before you crawl: ##
 
@@ -190,7 +189,7 @@ Below are the libraries used to provide a broad starting base for this project.
 
 ###### Quick Example: ######
 
-`src/main/scala/com/example/Main.scala`:
+`app/src/main/scala/com/example/Main.scala`:
 ```scala
 import cats.implicits._
 import com.monovore.decline._
@@ -228,13 +227,14 @@ object HelloWorld extends CommandApp(
 
 ###### How do we use it? ######
 
-- Modify `src/main/resources/logback.xml` to your desire. It currently has a basic, yet colorful, logger that simply prints TRACE level and above to the console.
+- Modify `app/src/main/resources/logback.xml` to your desire. It currently has a basic, yet colorful, logger that simply prints INFO level and above to the console.
+- Provide system properties to override values in the configuration like `root-log-level`, or add your own.
 - Inherit `LazyLogger` to a class and use the logger (or don't).
 - Alternatively, instantiate a new Logger and pass it a name or a class.
 
 ###### Quick Example: ######
 
-`src/main/scala/com/example/Main.scala`:
+`app/src/main/scala/com/example/Main.scala`:
 ```scala
 import com.typesafe.scalalogging.LazyLogging
 
