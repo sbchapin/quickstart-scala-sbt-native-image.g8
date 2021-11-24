@@ -33,6 +33,12 @@ lazy val app = (project in file("app"))
       ).mkString(",")
     ),
 
+    // Merging strategies used by `assembly` when assembling a fat jar.
+    assembly / assemblyMergeStrategy := {
+      case PathList(ps @ _*) if ps.last endsWith "module-info.class" => MergeStrategy.discard
+      case x                                                         => (assembly / assemblyMergeStrategy).value(x)
+    },
+
     // Concurrency:
     libraryDependencies += "org.typelevel" %% "cats-effect" % "3.2.9",
 
@@ -50,6 +56,7 @@ lazy val app = (project in file("app"))
 
 lazy val benchmarks = (project in file("benchmarks"))
   .enablePlugins(JmhPlugin)
+  .disablePlugins(AssemblyPlugin)
   .dependsOn(app)
   .settings(
     javaOptions ++= Seq(
