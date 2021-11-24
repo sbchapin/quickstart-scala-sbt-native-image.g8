@@ -4,7 +4,8 @@ ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xf
 ThisBuild / javacOptions ++= Seq("-source", "11", "-target", "11", "-Xlint")
 
 lazy val root = (project in file("."))
-  .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin)
+  .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin) // For making native applications
+  .enablePlugins(JmhPlugin)                                  // For microbenchmarking
   .settings(
     name    := "$name$",
     version := "0.0.0",
