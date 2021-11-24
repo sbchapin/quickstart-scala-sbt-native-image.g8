@@ -5,23 +5,23 @@ import com.monovore.decline.Opts
 import com.monovore.decline.effect.CommandIOApp
 import $package$.args.{Args, Cmd}
 
-/**
- * Various demos of what a native-image can do, including...
- * - Typesafe arg parsing using Decline
- * - Configurable logging interface using Scalalogging and underlying Logback mechanism
- * - Async & parallelization using Monix
- *
- * @author sbchapin
- * @since 11/11/19.
- */
-object Main extends CommandIOApp(
-  name = "$name$",
-  header = "Does some things with Graaaaaal!"
-) {
+/** Various demos of what a native-image can do, including...
+  *   - Typesafe arg parsing using Decline
+  *   - Configurable logging interface using Scalalogging and underlying Logback mechanism
+  *   - Async & parallelization using Monix
+  *
+  * @author
+  *   sbchapin
+  * @since 11/11/19.
+  */
+object Main
+    extends CommandIOApp(
+      name = "$name$",
+      header = "Does some things with Graaaaaal!"
+    ) {
 
-  /**
-   * Entrypoint
-   */
+  /** Entrypoint
+    */
   override def main: Opts[IO[ExitCode]] = {
     // parse the user's arguments...
     Args.allCommands.map {

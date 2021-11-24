@@ -5,9 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 
 object DemoLogging extends LazyLogging {
 
-  /**
-   * Demonstrates log levels and usage of scalalogging -> slf4j -> logbac
-   */
+  /** Demonstrates log levels and usage of scalalogging -> slf4j -> logback */
   def apply(name: String): IO[ExitCode] = {
 
     val logStuff = IO {
