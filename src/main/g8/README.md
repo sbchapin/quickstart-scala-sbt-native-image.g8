@@ -208,7 +208,7 @@ object HelloWorld extends CommandApp(
     (userOpt, quietOpt).mapN { (user, quiet) =>
 
       if (quiet) println("...")
-      else println(s"Hello $user!")
+      else println(s"Hello \$user!")
     }
   }
 )
