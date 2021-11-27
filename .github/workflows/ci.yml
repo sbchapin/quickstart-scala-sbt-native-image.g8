@@ -48,23 +48,23 @@ jobs:
         run: sbt --client '++${{ matrix.scala }}; test'
         shell: bash
 
-      - name: Use the template
-        run: sbt "++${{ matrix.scala }}; new file://`pwd` --name=materialized-template --force"
+      - name: Eject an instance of the template
+        run: sbt "++${{ matrix.scala }}; g8"
         shell: bash
 
       - name: Fat jar
-        working-directory: ./materialized-template
+        working-directory: ./target/g8
         run: sbt --client '++${{ matrix.scala }}; app/assembly'
         shell: bash
 
       - name: Native package
-        if: ${{ matrix.os == 'ubuntu-latest' }} # Graal packaging must use only Unix for libc bindings
-        working-directory: ./materialized-template
+        if: ${{ startsWith(matrix.os, 'ubuntu-') }} # Graal packaging must use only Unix for libc bindings
+        working-directory: ./target/g8
         run: sbt --client '++${{ matrix.scala }}; app/graalvm-native-image:packageBin'
         shell: bash
 
       - name: Performance benchmarks
-        if: ${{ matrix.java == 'adopt@1.8' || matrix.java == 'adopt@1.11' }} # JMH must use OpenJDK for accuracy
-        working-directory: ./materialized-template
-        run: sbt --client '++${{ matrix.scala }}; benchmarks/Jmh/run'
+        if: ${{ startsWith(matrix.java, 'adopt@') }} # JMH must use OpenJDK for benchmark accuracy
+        working-directory: ./target/g8
+        run: sbt --client '++${{ matrix.scala }}; benchmark'
         shell: bash
