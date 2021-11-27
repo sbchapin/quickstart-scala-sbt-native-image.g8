@@ -7,5 +7,5 @@ $ exists benchmarks/src/main/scala/benchmarks/DemoParallelismBenchmarks.scala
 # run scalafmt to check that everything is formatted
 > scalafmtCheckAll
 
-# run the tests
-> test
+# run the tests & build app jar
+> assembly
