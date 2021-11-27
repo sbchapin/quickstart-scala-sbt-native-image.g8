@@ -65,3 +65,5 @@ lazy val benchmarks = (project in file("benchmarks"))
       "-Droot-log-level=ERROR"                           // Set the log-level low so that JMH outputs are not polluted
     )
   )
+
+addCommandAlias("benchmark", "benchmarks/Jmh/run")

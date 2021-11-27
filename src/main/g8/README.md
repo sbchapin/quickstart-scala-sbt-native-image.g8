@@ -148,7 +148,7 @@ Below are the libraries used to provide a broad starting base for this project.
 
 ###### How do we use it? ######
 
-- SBT and [the sbt-jmh plugin](https://github.com/sbt/sbt-jmh) allow us to run via `sbt benchmarks/Jmh/run`
+- SBT and [the sbt-jmh plugin](https://github.com/sbt/sbt-jmh) allow us to run via `sbt benchmarks/Jmh/run` or simply `sbt benchmark`
 - The `./benchmarks` subproject contains JMH benchmarks that test components of the project, add new benchmarks there
   - Any `./app` code is available to test directly
   - If you are measuring performance on the larger scale (milliseconds and beyond), use [example benchmarks](https://github.com/sbt/sbt-jmh/tree/main/plugin/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples) as good starting points for JMH tests

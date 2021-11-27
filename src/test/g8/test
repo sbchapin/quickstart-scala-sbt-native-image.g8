@@ -1,11 +1,14 @@
 # check if the basic files are created
+$ exists build.sbt
 $ exists app/src/main/scala/com/sbchapin/examplescalasbtnativeimage/DemoParallelism.scala
 $ exists app/src/test/scala/com/sbchapin/examplescalasbtnativeimage/ParallelismSpec.scala
-$ exists build.sbt
-$ exists README.md
+$ exists benchmarks/src/main/scala/benchmarks/DemoParallelismBenchmarks.scala
 
 # run scalafmt to check that everything is formatted
 > scalafmtCheckAll
 
 # run the tests
 > test
+
+# run the benchmarks
+> benchmark
