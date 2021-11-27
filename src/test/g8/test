@@ -9,6 +9,3 @@ $ exists benchmarks/src/main/scala/benchmarks/DemoParallelismBenchmarks.scala
 
 # run the tests
 > test
-
-# run the benchmarks
-> benchmark
