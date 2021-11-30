@@ -100,5 +100,5 @@ jobs:
 
       - name: Performance benchmarks      
         working-directory: ./target/g8
-        run: sbt --client 'benchmark'
+        run: sbt --client 'measure'
         shell: bash
