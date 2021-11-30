@@ -12,6 +12,9 @@ ThisBuild / organization := "$organization$"
 ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 ThisBuild / javacOptions ++= Seq("-source", "11", "-target", "11", "-Xlint")
 
+addCommandAlias("measure", "benchmarks/Jmh/run -rff benchmark-measurements.csv")
+addCommandAlias("profile", "benchmarks/Jmh/run -prof jmh.extras.JFR -f 1")
+
 lazy val root = (project in file("."))
   .aggregate(app, benchmarks)
 
@@ -65,5 +68,3 @@ lazy val benchmarks = (project in file("benchmarks"))
       "-Droot-log-level=ERROR"                           // Set the log-level low so that JMH outputs are not polluted
     )
   )
-
-addCommandAlias("benchmark", "benchmarks/Jmh/run")

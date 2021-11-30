@@ -13,6 +13,7 @@ target/
 /lib_managed/
 *.jar
 *.class
+benchmark-measurements.csv
 
 # Metals Build
 .bloop
