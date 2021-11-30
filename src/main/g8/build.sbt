@@ -1,9 +1,24 @@
+// Handy commands:
+//   sbt test
+//   sbt testQuick
+//   sbt ~testQuick
+//   sbt compile
+//   sbt app/assembly
+//   sbt app/graalvm-native-image:packageBin
+//   sbt benchmarks/Jmh/run
+
 ThisBuild / scalaVersion := "2.13.7"
 ThisBuild / organization := "$organization$"
 ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 ThisBuild / javacOptions ++= Seq("-source", "11", "-target", "11", "-Xlint")
 
+addCommandAlias("measure", "benchmarks/Jmh/run -rff benchmark-measurements.csv")
+addCommandAlias("profile", "benchmarks/Jmh/run -prof jmh.extras.JFR -f 1")
+
 lazy val root = (project in file("."))
+  .aggregate(app, benchmarks)
+
+lazy val app = (project in file("app"))
   .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin)
   .settings(
     name    := "$name$",
@@ -21,6 +36,12 @@ lazy val root = (project in file("."))
       ).mkString(",")
     ),
 
+    // Merging strategies used by `assembly` when assembling a fat jar.
+    assembly / assemblyMergeStrategy := {
+      case PathList(ps @ _*) if ps.last endsWith "module-info.class" => MergeStrategy.discard
+      case x                                                         => (assembly / assemblyMergeStrategy).value(x)
+    },
+
     // Concurrency:
     libraryDependencies += "org.typelevel" %% "cats-effect" % "3.2.9",
 
@@ -34,4 +55,16 @@ lazy val root = (project in file("."))
     // Testing:
     libraryDependencies += "org.scalatest" %% "scalatest"                     % "3.2.9" % Test,
     libraryDependencies += "org.typelevel" %% "cats-effect-testing-scalatest" % "1.3.0" % Test
+  )
+
+lazy val benchmarks = (project in file("benchmarks"))
+  .enablePlugins(JmhPlugin)
+  .disablePlugins(AssemblyPlugin)
+  .dependsOn(app)
+  .settings(
+    javaOptions ++= Seq(
+      "-Dcats.effect.tracing.mode=none",                 // Prevent cats from tracing fibers
+      "-Dcats.effect.tracing.exceptions.enhanced=false", // Prevent cats from adding exception handlers
+      "-Droot-log-level=ERROR"                           // Set the log-level low so that JMH outputs are not polluted
+    )
   )

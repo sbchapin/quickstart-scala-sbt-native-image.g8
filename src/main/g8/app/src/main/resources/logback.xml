@@ -4,7 +4,8 @@
             <pattern>[%date] %highlight([%-5level]) [%thread %logger{20} %file:%line] %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="trace">
+    <!-- Override this by passing a system property: -Droot-log-level={OFF|ERROR|WARN|INFO|TRACE} -->
+    <root level="\${root-log-level:-INFO}">
         <appender-ref ref="COLOR"/>
     </root>
 </configuration>

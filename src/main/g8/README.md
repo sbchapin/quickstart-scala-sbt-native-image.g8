@@ -35,7 +35,6 @@ There are a couple of things you're probably gonna want to have installed on you
 - OSX without Docker: If you intend to build this project to a binary on your machine rather than build it within Docker...
     - Install [GraalVM CE](https://www.graalvm.org/docs/getting-started/) - or better yet - [install jabba](https://github.com/shyiko/jabba#installation) Java Version Manager to [install GraalVM](https://github.com/shyiko/jabba#usage)
     - Install [native-image](https://www.graalvm.org/docs/reference-manual/native-image/) via `gu install native-image`
-    - [Remove this line](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8/blob/master/src/main/g8/build.sbt#L20) if you are on OSX (linux environments with `libc` can leave it in)
 
 ## Become an Olympic gymnast before you crawl: ##
 
@@ -137,6 +136,28 @@ Below are the libraries used to provide a broad starting base for this project.
 
 
 
+## [jmh](https://github.com/openjdk/jmh) - performance (micro)benchmarking ##
+
+`jmh` is a microbenching runner and harness (like a test framework, but for measuring and reporting rather than qualifying & asserting). 
+
+###### Why do we use it? ######
+
+- To gauge performance bottlenecks in isolation under a variety of circumstances
+- To tightly integrate with parts of your program and performance test them thoroughly
+- To win arguments with friends
+
+###### How do we use it? ######
+
+- SBT and [the sbt-jmh plugin](https://github.com/sbt/sbt-jmh) allow us to run via `sbt benchmarks/Jmh/run` - In addition, there are two aliases of this command:
+  - `sbt measure` to run JMH and record results to `benchmark-measurements.csv`
+  - `sbt profile` to run JMH along with the included JFR JVM profiler *([which could be parameterized for whatever](https://blog.couchbase.com/all-the-small-things-jvm-profiling-lessons-from-the-trenches/))*
+- The `./benchmarks` subproject contains JMH benchmarks that test components of the project, add new benchmarks there
+  - Any `./app` code is available to test directly
+  - If you are measuring performance on the larger scale (milliseconds and beyond), use [example benchmarks](https://github.com/sbt/sbt-jmh/tree/main/plugin/src/sbt-test/sbt-jmh/run/src/main/scala/org/openjdk/jmh/samples) as good starting points for JMH tests
+  - If you are measuring performance on the small-scale (nanoseconds), [read this first](https://shipilev.net/blog/2014/nanotrusting-nanotime/) to ensure you are doing so correctly and reasoning about your results appropriately
+
+
+
 ## [scoverage](https://github.com/scoverage/sbt-scoverage) - coverage ##
 
 `scoverage` is a sbt plugin that works in conjunction with scalatest that allows the generation of "coverage reports".  Coverage reports allow us to see what portions of our codebase have been hit by tests.  Most importantly, scoverage generates reports at a statement-level, so things like anonymous functions are checked for usage correctly.
@@ -190,7 +211,7 @@ Below are the libraries used to provide a broad starting base for this project.
 
 ###### Quick Example: ######
 
-`src/main/scala/com/example/Main.scala`:
+`app/src/main/scala/com/example/Main.scala`:
 ```scala
 import cats.implicits._
 import com.monovore.decline._
@@ -208,7 +229,7 @@ object HelloWorld extends CommandApp(
     (userOpt, quietOpt).mapN { (user, quiet) =>
 
       if (quiet) println("...")
-      else println(s"Hello $user!")
+      else println(s"Hello \$user!")
     }
   }
 )
@@ -228,13 +249,14 @@ object HelloWorld extends CommandApp(
 
 ###### How do we use it? ######
 
-- Modify `src/main/resources/logback.xml` to your desire. It currently has a basic, yet colorful, logger that simply prints TRACE level and above to the console.
+- Modify `app/src/main/resources/logback.xml` to your desire. It currently has a basic, yet colorful, logger that simply prints INFO level and above to the console.
+- Provide system properties to override values in the configuration like `root-log-level`, or add your own.
 - Inherit `LazyLogger` to a class and use the logger (or don't).
 - Alternatively, instantiate a new Logger and pass it a name or a class.
 
 ###### Quick Example: ######
 
-`src/main/scala/com/example/Main.scala`:
+`app/src/main/scala/com/example/Main.scala`:
 ```scala
 import com.typesafe.scalalogging.LazyLogging
 

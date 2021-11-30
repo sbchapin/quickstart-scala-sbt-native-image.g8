@@ -18,6 +18,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
 
+      # Set up:
+
       - name: Configure git
         run: "git config --global core.autocrlf false"
         shell: bash
@@ -44,6 +46,59 @@ jobs:
             ~/Library/Caches/Coursier/v1
           key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
+      # Test the g8 template application:
+
       - name: Test the template
         run: sbt --client '++${{ matrix.scala }}; test'
+        shell: bash
+
+  benchmark:
+    name: Benchmark
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        java: [ adopt@1.11 ] # JMH must use OpenJDK for benchmark accuracy
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      # Set up:
+
+      - name: Configure git
+        run: "git config --global core.autocrlf false"
+        shell: bash
+
+      - name: Checkout current branch (partial, up to 100 depth)
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
+
+      - name: Setup Java and Scala
+        uses: olafurpg/setup-scala@v12
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Cache sbt
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.sbt
+            ~/.ivy2/cache
+            ~/.coursier/cache/v1
+            ~/.cache/coursier/v1
+            ~/AppData/Local/Coursier/Cache/v1
+            ~/Library/Caches/Coursier/v1
+          key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+
+      # Eject the g8 template:
+
+      - name: Eject an instance of the template
+        run: sbt "g8"
+        shell: bash
+
+      # Benchmark the materialized template:
+
+      - name: Performance benchmarks      
+        working-directory: ./target/g8
+        run: sbt --client 'measure'
         shell: bash
