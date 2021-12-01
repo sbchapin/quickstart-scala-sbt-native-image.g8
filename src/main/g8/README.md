@@ -122,16 +122,11 @@ Do your reading before you decide to push the outputs of native-image to product
 
 - JUnit just doesn't cut it for scala.
     - JUnit assertions & matchers can be simplified.
-
     - JUnit supports only test specifications.
-
 - Scalatest [gives many options](http://www.scalatest.org/user_guide/selecting_a_style) when it comes to testing style.
     - Specification style (like Rspec).
-
     - Behavior Specifications (like cucumber).
-
     - Basic build-your-own-spec.
-
     - Even JUnit style.
 
 - The matchers and assertions are amazing (try to `assert(something)`, it gives great results.)
@@ -213,6 +208,7 @@ Do your reading before you decide to push the outputs of native-image to product
 - Self-documenting with standardization.
 - Makes it easy to simultaneously standardize, document, validate, and parse.
 - Options like `Argot` are deprecated, where others like `Scallop` allow arguments that get confusing to document (passing `-42` where the argument is numerically flexible).
+- It plays well with Graal
 
 ###### How do we use it? ######
 
@@ -254,7 +250,9 @@ object HelloWorld extends CommandApp(
 - `scala-logging` is coupled tightly to scala, and thus is very performant, making use of scala macros to intelligently not log when the logging level is not requested.  This allows us to leave trace & debug logs everywhere we need them without worrying about performance.
 - Abstraction over `slf4j` allows the end-user to decide how they want to handle logs.
 - `logback-classic` can be drop-in-replaced - all of the dependencies are run-time.
-- If you want to use `Log4J2` (or another logging backend that relies heavily upon reflection), be warned that the SubstrateVM's "out of the box" configuration won't be enough and [you'll need to do some configuration first](https://github.com/oracle/graal/issues/808#issuecomment-470769285). If you don't absolutely need log4j2, you could simply wait for SubstrateVM's [automatic detection of reflection](https://github.com/oracle/graal/blob/master/substratevm/REFLECTION.md#automatic-detection) to be expanded upon so you can keep your project a little more lean in the meantime.     
+- If you want to use `Log4J2` (or another logging backend that relies heavily upon reflection), be warned that the SubstrateVM's "out of the box" configuration won't be enough and [you'll need to do some configuration first](https://github.com/oracle/graal/issues/808#issuecomment-470769285). If you don't absolutely need log4j2, you could simply wait for SubstrateVM's [automatic detection of reflection](https://github.com/oracle/graal/blob/master/substratevm/REFLECTION.md#automatic-detection) to be expanded upon so you can keep your project a little more lean in the meantime.
+- It plays well with Graal
+
 
 ###### How do we use it? ######
 
