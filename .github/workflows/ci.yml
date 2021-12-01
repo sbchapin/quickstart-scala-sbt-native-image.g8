@@ -100,7 +100,13 @@ jobs:
         shell: bash
 
   docker:
-    runs-on: ubuntu-latest
+    name: Docker GraalVM native-image compile and run
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        java: [ adopt@1.11 ] # JMH must use OpenJDK for benchmark accuracy
+    runs-on: ${{ matrix.os }}
     steps:
 
       # Set up:
@@ -111,7 +117,7 @@ jobs:
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@v12
         with:
-          java-version: adopt@1.11
+          java-version: ${{ matrix.java }}
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
