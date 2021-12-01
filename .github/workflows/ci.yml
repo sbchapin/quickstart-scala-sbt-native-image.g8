@@ -98,3 +98,45 @@ jobs:
         working-directory: ./target/g8
         run: sbt --client 'measure'
         shell: bash
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Set up:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - name: Setup Java and Scala
+        uses: olafurpg/setup-scala@v12
+        with:
+          java-version: adopt@1.11
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+    
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Eject the g8 template:
+
+      - name: Eject an instance of the template
+        run: sbt "g8"
+        shell: bash
+
+      # Build and run docker image:
+
+      - name: Build and export to Docker (does not publish)
+        uses: docker/build-push-action@v2
+        working-directory: ./target/g8
+        with:
+          context: .
+          push: false
+          load: true
+          tags: sbchapin/quickstart-scala-sbt-native-image-example:test
+
+      - name: Test
+        working-directory: ./target/g8
+        run: |
+          docker run --rm sbchapin/quickstart-scala-sbt-native-image-example:test hi
