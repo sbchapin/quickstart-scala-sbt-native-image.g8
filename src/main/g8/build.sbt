@@ -4,7 +4,7 @@
 //   sbt ~testQuick
 //   sbt compile
 //   sbt app/assembly
-//   sbt app/graalvm-native-image:packageBin
+//   sbt app/native-image
 //   sbt benchmarks/Jmh/run
 
 ThisBuild / scalaVersion := "2.13.7"
@@ -19,23 +19,19 @@ lazy val root = (project in file("."))
   .aggregate(app, benchmarks)
 
 lazy val app = (project in file("app"))
-  .enablePlugins(JavaAppPackaging, GraalVMNativeImagePlugin)
+  .enablePlugins(NativeImagePlugin)
   .settings(
     name    := "$name$",
     version := "0.0.0",
 
     // Options used by `native-image` when building native image.
     // https://www.graalvm.org/docs/reference-manual/native-image/
-    graalVMNativeImageOptions ++= Seq(
+    nativeImageOptions ++= Seq(
+      "-H:+ReportExceptionStackTraces",
       "--no-fallback", // Bakes-in run-time reflection (alternately: --auto-fallback, --force-fallback)
-      "--no-server",   // Won't be running `graalvm-native-image:packageBin` often, so one less thing to break
-      "--static", // Disable for OSX (non-docker) builds - Forces statically-linked binary, compatible with libc (linux)
-      "--initialize-at-build-time=" + Seq( // Auto-packs dependent libs at build-time
-        "$package$"
-        // "some.class.with.long.initialization.Time"
-      ).mkString(",")
+      "--static", // Disable for OSX/Windows (non-docker) builds - Forces statically-linked binary, compatible with libc (linux)
+      "--initialize-at-build-time" // Auto-packs all dependent libs at build-time - consider customizing this
     ),
-
     // Merging strategies used by `assembly` when assembling a fat jar.
     assembly / assemblyMergeStrategy := {
       case PathList(ps @ _*) if ps.last endsWith "module-info.class" => MergeStrategy.discard

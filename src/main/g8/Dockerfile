@@ -15,11 +15,13 @@
 #
 # BUILDER:
 #
-# Use a dockerized native builder
+# 1. Use a dockerized native builder and 2. Let sbt's coursier know it doesn't need to install GraalVM
 FROM ghcr.io/graalvm/graalvm-ce:java11-21.3.0 as binarybuilder
+ENV GRAALVM_INSTALLED=true
 
-# Install native-image so we can emit a pre-built statically-linked binary
+# 1. Install native-image so we can emit a pre-built statically-linked binary and 2. Let sbt know it doesn't need to install native-image
 RUN gu install native-image
+ENV NATIVE_IMAGE_INSTALLED=true
 
 # Use SBT wrapper script to alias sbt to download and use version specified within project
 RUN curl -Ls https://git.io/sbt > /usr/local/bin/sbt && chmod 0755 /usr/local/bin/sbt
@@ -38,15 +40,15 @@ COPY project   project
 RUN sbt update test:update runtime:update
 
 # Build the project
-COPY src /build/src
+COPY app/src /build/app/src
 
-RUN sbt graalvm-native-image:packageBin
+RUN sbt app/nativeImage
 
 #
 # BUILT:
 #
 # (note: can be 'FROM scratch' and be a few MB smaller, as the native image is compatible being a base-level docker image.  Currently running in 'alpine' for usability.)
-FROM alpine:3.10.3
-COPY --from=binarybuilder /build/target/graalvm-native-image/$name$ /opt/docker/$name$
+FROM alpine:3.15.0
+COPY --from=binarybuilder /build/app/target/native-image/$name$ /opt/docker/$name$
 ENTRYPOINT ["/opt/docker/$name$"]
 CMD []

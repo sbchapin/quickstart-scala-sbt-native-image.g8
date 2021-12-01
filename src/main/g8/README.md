@@ -10,7 +10,7 @@ The intention is to use `sbt new` on [this library's exterior g8 template](https
 
 - `Scala 2.13` for **coding**
 - `sbt 1.+` for **building**
-- `sbt-native-packager` plugin for **building a linked binary** _(builds ahead-of-time using GraalVM statically linking and building all dependencies in a docker image via `sbt graalvm-native-image:packageBin`)_
+- `sbt-native-image` plugin for **building a linked binary** _(assembles ahead-of-time using GraalVM statically linking and building all dependencies in a docker image via `sbt nativeImage`)_
 - `scalatest` for **testing** _(default test runner via `sbt test`)_
 - `sbt-scoverage` for **test coverage** _(statement-level coverage via `sbt coverage`)_
 - `scalalogging -> logback-classic` for **logging** _(`logback-classic` is used as a backend)_
@@ -40,7 +40,7 @@ There are a couple of things you're probably gonna want to have installed on you
 
 Remove previous build, check for updates for dependencies, view dependency graph in-browser, compile, test with coverage, generate coverage report, create a fat jar, and finally run from source.
 ```sh
-sbt clean dependencyUpdates dependencyBrowseGraph compile coverage test coverageReport coverageOff graalvm-native-image:packageBin run
+sbt clean dependencyUpdates dependencyBrowseGraph compile coverage test coverageReport coverageOff nativeImage run
 ```
 
 
@@ -53,8 +53,8 @@ docker run $name$ --help
 docker run $name$ hi -n '$name$'
 docker run $name$ pi --iterations 100000 --parallelism 10
 # ...or if on linux (or other libc system)...
-sbt graalvm-native-image:packageBin # binary created under target/graalvm-native-image/$name$\
-target/graalvm-native-image/$name$ --help
+sbt app/nativeImage # binary created under app/target/native-image/$name$\
+app/target/native-image/$name$ --help
 # ...see above docker examples...
 ```
 
@@ -89,19 +89,28 @@ Below are the libraries used to provide a broad starting base for this project.
 
 
 
-## [sbt-native-packager](https://github.com/sbt/sbt-native-packager) - JRE-less executable ##
+## [sbt-native-image](https://github.com/scalameta/sbt-native-image) - JRE-less executable ##
 
-`sbt-native-packager` is an sbt plugin that allows sbt to build various distributables.
+`sbt-native-image` is an sbt plugin that allows sbt to build assembled JRE-less executables using GraalVM.  This plugin handles downloading and installation of the related Graal JDK and native-image tool which are required to make the executable binary.  However, these are very particular about their targets - That's where we pick up with docker in this repo, ultimately ending up with a portable, fast, minified docker image with a single binary in it:
+
+1. **sbt + sbt-native-image + GraalVM + native-image** get us from **scala-to-bytecode-to-llvm-to-libc**.
+2. **docker** gets us from **libc-to-kernel**, providing a consistent "target" for GraalVM & native-image.
+
+However, it isn't all roses.  **The native-image & AoT aspect of any project building with Graal is very brittle**, as all classes exposed exclusively via reflection at run-time [must be explicitly provided to Graal](https://www.graalvm.org/reference-manual/native-image/Reflection/), whether determined automatically or manually.  
+
+Do your reading before you decide to push the outputs of native-image to production, and consider the cost of maintaining reflection mappings.
 
 ###### Why do we use it? ######
 
-- GraalVM integration allows us to build small fast-starting binaries.
-- Bake dependencies into binaries.
+- GraalVM integration allows us to build small fast-starting binaries out of Scala that would have otherwise been bytecode.  Throwing the JRE baby out with the bathwater offers several benefits:
+  - No JVM cold start
+  - AoT target-based compilation means no JIT jitters or hotspot hotflashes
+  - Tiny docker images (tens of MB) with the smallest possible base image *(even from [scratch](https://hub.docker.com/_/scratch), if you want)*
 
 ###### How do we use it? ######
 
 - By running `docker build -t $name$ . && docker run $name$` to generate a very small (<10 MB) image with very little (milliseconds) of start-up time.
-- By running `sbt graalvm-native-image:packageBin` to generate an executable if in a libc environment (linux) with GraalVM and the native-image plugin already installed.
+- Or by running `sbt app/nativeImage` to generate an executable if in a compatible environment (most linux distros), then executing or distrubuting the resultant binary in `app/app/targetive-image/$name$`
 
 
 
