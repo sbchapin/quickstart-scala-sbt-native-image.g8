@@ -96,9 +96,9 @@ Below are the libraries used to provide a broad starting base for this project.
 1. **sbt + sbt-native-image + GraalVM + native-image** get us from **scala-to-bytecode-to-llvm-to-libc**.
 2. **docker** gets us from **libc-to-kernel**, providing a consistent "target" for GraalVM & native-image.
 
-However, it isn't all roses.  **The native-image & AoT aspect of any project building with Graal is very brittle**, as all classes exposed exclusively via reflection at run-time [must be explicitly provided to Graal](https://www.graalvm.org/reference-manual/native-image/Reflection/), whether determined automatically or manually.  
+However, it isn't all roses.  **The native-image & AoT aspect of any project building with Graal is very brittle**.  All classes exposed exclusively via reflection at run-time [must be explicitly provided to Graal](https://www.graalvm.org/reference-manual/native-image/Reflection/), whether determined automatically or manually.  Some [substitutions](https://blog.frankel.ch/solving-substitution-graalvm-issue/) may need to be made at build-time for components that just aren't compatible with Graal.  Complex native libraries like DNS need to be [worked-around](https://github.com/oracle/graal/issues/571).  The list goes on...
 
-Do your reading before you decide to push the outputs of native-image to production, and consider the cost of maintaining reflection mappings.
+Do your reading before you decide to push the outputs of native-image to production, and consider the cost of maintainance.  Reflection mappings, substitutions, and native library dependency management will add up greatly.
 
 ###### Why do we use it? ######
 
